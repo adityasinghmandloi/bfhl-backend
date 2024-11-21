@@ -1,5 +1,6 @@
 // In your backend controller
-import { validateJSON } from './middlewares/validateJSON.js';
+import { validateJSON } from '../middlewares/validateJSON.js';
+
 
 export const processRequest = (req, res) => {
   // Extract data and category from the request body
