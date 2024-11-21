@@ -1,48 +1,30 @@
-const { validateFile, extractData, isPrime } = require('../utils/helpers');
+// In your backend controller
+import { validateJSON } from './middlewares/validateJSON.js';
 
-const handleGetRequest = (req, res) => {
-    return res.status(200).json({ operation_code: 1 });
+export const processRequest = (req, res) => {
+  // Extract data and category from the request body
+  const { data, category } = req.body;
+
+  // Log the received data for debugging
+  console.log('Received data:', data);
+  console.log('Received category:', category);
+
+  // Validate the structure of data
+  const validationResult = validateJSON(data);
+
+  if (!validationResult.validJSON) {
+    // If validation fails, return an error
+    return res.status(400).json({ error: validationResult.jsonError });
+  }
+
+  // Assuming you want to filter based on category, check for matching logic
+  const filteredData = data.filter(item => item === category); // Example: filter based on category
+
+  // If no matching data found, return a message
+  if (filteredData.length === 0) {
+    return res.status(200).json({ message: 'No matching data found for the selected category.' });
+  }
+
+  // Send the filtered data as the response
+  res.json({ data: filteredData });
 };
-
-const handlePostRequest = (req, res) => {
-    try {
-        const { data, file_b64 } = req.body;
-
-        if (!Array.isArray(data)) {
-            return res.status(400).json({ is_success: false, error: 'Invalid data format' });
-        }
-
-        const numbers = [];
-        const alphabets = [];
-        let highestLowercase = '';
-        let primeFound = false;
-
-        data.forEach((item) => {
-            if (!isNaN(item)) numbers.push(item);
-            else if (/^[a-zA-Z]$/.test(item)) {
-                alphabets.push(item);
-                if (/[a-z]/.test(item) && item > highestLowercase) highestLowercase = item;
-            }
-        });
-
-        primeFound = numbers.some((num) => isPrime(parseInt(num, 10)));
-
-        const fileInfo = validateFile(file_b64);
-
-        return res.status(200).json({
-            is_success: true,
-            user_id: 'john_doe_17091999',
-            email: 'john@xyz.com',
-            roll_number: 'ABCD123',
-            numbers,
-            alphabets,
-            highest_lowercase_alphabet: highestLowercase ? [highestLowercase] : [],
-            is_prime_found: primeFound,
-            ...fileInfo,
-        });
-    } catch (err) {
-        return res.status(500).json({ is_success: false, error: err.message });
-    }
-};
-
-module.exports = { handleGetRequest, handlePostRequest };

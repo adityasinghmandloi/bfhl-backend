@@ -1,13 +1,15 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-const bfhlRoutes = require('./routes/bfhl');
+import express from 'express';
+import cors from 'cors';
+import bfhlRoutes from './routes/bfhlRoutes.js';
 
 const app = express();
+const port = 5000;
+
 app.use(cors());
-app.use(bodyParser.json({ limit: '2mb' }));
+app.use(express.json());
 
-app.use('/bfhl', bfhlRoutes);
+app.use('/api/bfhl', bfhlRoutes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
+});
