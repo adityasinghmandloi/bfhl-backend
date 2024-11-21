@@ -25,9 +25,4 @@ The response includes:
 - `file_mime_type`: The MIME type of the file (if provided).
 - `file_size_kb`: The size of the file in kilobytes (if provided).
 
-**Example Request**:
-```json
-{
-  "data": ["M", "1", "334", "4", "B", "Z", "a", "7"],
-  "file_b64": "BASE64_STRING"
-}
+
